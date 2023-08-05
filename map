@@ -1,0 +1,38 @@
+Open a Transaction 
+  ApiUtil.initTransaction(); 
+ 
+  // Create a map of credentials (from user input) 
+  Properties credentials = new Properties(); 
+  credentials.put(ApiContextFactory.CREDENTIAL_USERNAME, username); 
+  credentials.put(ApiContextFactory.CREDENTIAL_PASSWORD, password); 
+ 
+  // Attempt to authenticate using the credentials 
+  IApiContext apiContext = ApiContextFactory.createApiContext(credentials); 
+ 
+  // Save the IApiContext in the HttpSession 
+  session.setAttribute("API_CONTEXT", apiContext); 
+ 
+  // Commit the Transaction 
+  ApiUtil.commitTransaction(); 
+} 
+catch (MDSException e) 
+{ 
+  // Rollback the Transaction 
+  ApiUtil.rollbackTransaction(); 
+ 
+  // Evaluate the exception's error code 
+  if(e.getErrorCode().equals(MDSException.MDS_EX_SUBSCRIBER_DISABLED) 
+  { 
+    // handle disabled user 
+    ... 
+  } 
+  else 
+  { 
+    // handle API Exception 
+    ... 
+  } 
+} 
+finally 
+{ 
+  // clean up Transaction 
+  ApiUtil.disposeTransaction(); 
